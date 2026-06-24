@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { apiFetch } from "../lib/api";
 
 const budgetOptions = ["Low", "Medium", "High"];
 const interestOptions = ["Food", "Culture", "Adventure", "Shopping", "Relaxation"];
@@ -38,21 +39,11 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5000/api/trips", {
+      const data = await apiFetch("/api/trips", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: "Bearer demo-token",
-        },
         body: JSON.stringify(form),
       });
 
-      if (!response.ok) {
-        const body = await response.json();
-        throw new Error(body.message || "Failed to generate trip");
-      }
-
-      const data = await response.json();
       setTrip(data);
     } catch (err) {
       setError(err.message);
